@@ -1,0 +1,347 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>City Exploration</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* Background image of city */
+        .city-map {
+            background-image: url('image/city.jpg');
+            background-size: cover;
+            background-position: center;
+            height: 100vh;
+            position: relative;
+        }
+
+        /* Modal (Pop-up window) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 60%;
+            background-color: rgba(0, 0, 0, 0.8);
+            border-radius: 10px;
+            color: white;
+            padding: 20px;
+            text-align: center;
+            z-index: 10;
+            overflow-y: auto;
+        }
+
+        .modal img.character {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+        }
+
+        .modal img.location {
+            width: 100%;
+            max-height: 400px;
+            object-fit: cover;
+            margin-top: 20px;
+        }
+
+        .modal h2 {
+            margin-top: 20px;
+        }
+
+        .modal p {
+            font-size: 18px;
+        }
+
+        .modal button {
+            background-color: hotpink;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        /* Pins for Home and Movie Theater */
+        .pin {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            background-image: url('image/pin.png'); /* Your pin image */
+            background-size: contain;
+            background-repeat: no-repeat;
+            cursor: pointer;
+            z-index: 5;
+        }
+
+        .pin-home {
+            top: 40%; /* Adjust this to the correct position on your city map */
+            left: 30%; /* Adjust this to the correct position */
+        }
+
+        .pin-movie-theater {
+            top: 60%; /* Adjust this to the correct position */
+            left: 60%; /* Adjust this to the correct position */
+        }
+
+        /* Tooltip style */
+        .tooltip {
+            visibility: hidden;
+            position: absolute;
+            background-color: rgba(0, 0, 0, 0.7);
+            color: white;
+            text-align: center;
+            border-radius: 5px;
+            padding: 5px;
+            font-size: 14px;
+            width: 120px;
+            top: -30px; /* Adjust positioning */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+
+        /* Show the tooltip when hovering over the pin */
+        .pin:hover .tooltip {
+            visibility: visible;
+        }
+
+
+           /* Back button (top right corner) */
+ .back-btn {
+     position: absolute;
+     top: 20px;
+     right: 20px;
+     background-color: hotpink;
+     color: white;
+     font-size: 18px;
+     padding: 10px 20px;
+     border: none;
+     cursor: pointer;
+     border-radius: 5px;
+     z-index: 20;
+ }
+ /* Character styling */
+/* Character styling */
+.character {
+    position: absolute;
+    bottom: -10%; /* Move the character down */
+    left: 70%;   /* Move the character to the right */
+    transform: translateX(-50%);
+    width: 420px;  /* Enlarge the character width */
+    height: auto;  /* Maintain aspect ratio */
+    transition: all 3s ease; /* Smooth transition for movement */
+}
+
+
+/* ZZZZ text animation */
+.zzz-text {
+    position: absolute;
+    bottom: 40%; /* Adjust the position */
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 48px;
+    color: white;
+    display: none; /* Hidden by default */
+}
+
+/* Cat image styling (hidden by default) */
+.cat {
+    position: absolute;
+    top: 40%; /* Adjust to place the cat over the bedroom */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 150px;
+    display: none; /* Hidden by default */
+}
+
+/* Cat food box animation */
+.cat-food-box {
+    position: absolute;
+    bottom: 15%; /* Adjust position */
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    display: none; /* Hidden by default */
+    transition: transform 0.2s; /* Shaking effect */
+}
+
+
+    </style>
+</head>
+<body>
+
+    <div class="city-map">
+        <!-- Home Pin -->
+        <div class="pin pin-home" onclick="openHome()">
+            <div class="tooltip">Welcome Home</div> <!-- Tooltip text -->
+        </div>
+
+        <!-- Movie Theater Pin -->
+        <div class="pin pin-movie-theater" onclick="openMovieTheater()">
+            <div class="tooltip">Movie Theater</div> <!-- Tooltip text -->
+        </div>
+
+        <!-- Modal for Home Exterior -->
+        <div class="modal" id="home-modal">
+            <h2>Welcome Home!</h2>
+            <p>Head inside and explore your cozy space.</p>
+            <button onclick="openBedroom()">Head Inside</button>
+            <button onclick="closeModal('home-modal')">Close</button>
+            <img id="home-image" class="location" src="image/brownstone.jpg" alt="Home Exterior">
+        </div>
+
+        <!-- Modal for Bedroom -->
+       <!-- Bedroom Modal -->
+<div class="modal" id="bedroom-modal">
+    <h2>Cozy Bedroom</h2>
+    <p>Welcome to your cozy bedroom! What would you like to do?</p>
+    <button onclick="takeAction('nap')">Take a Nap</button>
+    <button onclick="takeAction('tv')">Watch TV</button>
+    <button onclick="takeAction('cat')">Feed Luna</button>
+    <button onclick="closeModal('bedroom-modal')">Close</button>
+    <img id="bedroom-image" class="location" src="image/bedroom.jpg" alt="Bedroom">
+    
+    <!-- Character image -->
+    <img id="character" src="image/cartoon_edit.png" alt="Character" class="character">
+    
+    <!-- ZZZZ text -->
+    <div id="zzz" class="zzz-text">ZZZZ</div>
+
+    <!-- Cat image (hidden initially) -->
+    <img id="cat" src="image/cat2.jpg" alt="Cat" class="cat">
+    
+    <!-- Cat food box image -->
+    <img id="cat-food-box" src="image/cat_food.png" alt="Cat Food Box" class="cat-food-box">
+</div>
+
+
+        <!-- Modal for Movie Theater -->
+        <div class="modal" id="movie-theater-modal">
+            <h2>Pick a Movie</h2>
+            <p>Pick a movie from the options below!</p>
+            <button onclick="pickMovie('movie1')">Movie 1</button>
+            <button onclick="pickMovie('movie2')">Movie 2</button>
+            <button onclick="pickMovie('movie3')">Movie 3</button>
+            <button onclick="pickMovie('movie4')">Movie 4</button>
+            <button onclick="closeModal('movie-theater-modal')">Close</button>
+            <img id="movie-theater-image" class="location" src="image/movies.png" alt="Movie Theater">
+        </div>
+    </div>
+
+     <!-- Back to Game button -->
+ <button class="back-btn" onclick="window.location.href='game.html';">Back</button>
+
+    <script>
+        function openHome() {
+            // Show the home exterior modal when "Home" pin is clicked
+            document.getElementById('home-modal').style.display = 'block';
+        }
+
+        function openBedroom() {
+            // Close the home exterior modal and show the bedroom modal
+            closeModal('home-modal');
+            document.getElementById('bedroom-modal').style.display = 'block';
+        }
+
+        function openMovieTheater() {
+            // Show the movie theater modal when "Movie Theater" pin is clicked
+            document.getElementById('movie-theater-modal').style.display = 'block';
+        }
+
+        function closeModal(modalId) {
+            // Hide the modal
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function takeAction(action) {
+            if (action === 'nap') {
+                alert('You took a nap! Rest well.');
+            } else if (action === 'tv') {
+                alert('You are watching TV. Enjoy!');
+            } else if (action === 'cat') {
+                alert('You fed the cat! It\'s happy now.');
+            }
+        }
+
+        function pickMovie(movie) {
+            let movieLink = '';
+
+            if (movie === 'movie1') {
+                movieLink = 'https://www.youtube.com/watch?v=WT1-8T_Taro&list=PLZbXA4lyCtqrOIEJ0n1tV0q7kmA8sbYiQ&index=1'; // Replace with your YouTube video link
+            } else if (movie === 'movie2') {
+                movieLink = 'https://www.youtube.com/watch?v=_8w9rOpV3gc'; // Replace with your YouTube video link
+            } else if (movie === 'movie3') {
+                movieLink = 'https://www.youtube.com/watch?v=iXDnFYu91vY&list=PLIr7jPK0gK4Ud_9T9BEJTYMB6uC4AQYyg'; // Replace with your YouTube video link
+            } else if (movie === 'movie4') {
+                movieLink = 'https://www.youtube.com/watch?v=GwvyViko4fk&list=PLZbXA4lyCtqowIE4YSR3mnXuMCXCLUnh4&index=19'; // Replace with your YouTube video link
+            }
+
+            if (movieLink) {
+                window.open(movieLink, '_blank'); // Opens the movie link in a new tab
+            }
+        }
+
+
+        function takeAction(action) {
+            if (action === 'nap') {
+                takeNap();
+            } else if (action === 'tv') {
+                alert('You are watching TV. Enjoy!');
+            } else if (action === 'cat') {
+                takeCareOfCat();
+            }
+        }
+
+        function takeNap() {
+            // Show the ZZZZ text
+            document.getElementById('zzz').style.display = 'block';
+
+            // Move the character to the left (you can adjust the value to control how far it moves)
+            const character = document.getElementById('character');
+            character.style.transform = 'translateX(-250%)'; // Move the character to the left by 150%
+
+            // After 3 seconds, hide ZZZZ and reset character to its original position
+            setTimeout(function () {
+                document.getElementById('zzz').style.display = 'none';
+                character.style.transform = 'translateX(-50%)'; // Reset character to its initial position (centered)
+            }, 3000);
+        }
+
+
+        function takeCareOfCat() {
+            // Show the cat and cat food box
+            document.getElementById('cat').style.display = 'block';
+            document.getElementById('cat-food-box').style.display = 'block';
+
+            // Make the cat food box shake for 2 seconds
+            const catFoodBox = document.getElementById('cat-food-box');
+            catFoodBox.style.transform = 'translateX(-50%) rotate(20deg)';
+
+            // Play the sound effect for shaking the box
+            const shakeSound = new Audio('image/cat_food.wav'); // Add the path to your shaking sound
+            shakeSound.play();
+
+            // After 2 seconds, reset the food box
+            setTimeout(function () {
+                catFoodBox.style.transform = 'translateX(-50%) rotate(0deg)';
+            }, 4000);
+
+            // Hide the cat food box and cat after 2 seconds
+            setTimeout(function () {
+                document.getElementById('cat').style.display = 'none';
+                document.getElementById('cat-food-box').style.display = 'none';
+            }, 4000);
+        }
+
+
+    </script>
+
+</body>
+</html>

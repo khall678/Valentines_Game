@@ -1,0 +1,194 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love</title>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7e1d7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            position: relative;
+            overflow: hidden; /* To make sure falling hearts don't overflow outside the screen */
+            flex-direction: column; /* Stack elements vertically */
+        }
+
+        /* Heading */
+        h1 {
+            font-size: 30px;
+            color: hotpink;
+            margin-bottom: 20px;
+            top: 150px;
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+         z-index: 10;
+        }
+
+        /* Score display */
+        .score {
+            position: absolute;
+            font-size: 34px;
+            color: hotpink;
+            font-weight: bold;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 240px;
+            z-index: 11;
+        }
+
+        /* High score display */
+        .high-score {
+            font-size: 24px;
+            color: hotpink;
+            position: absolute;
+            top: 350px; /* Position it below the score */
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+        }
+          /* Reset button */
+        .reset-btn {
+            position: absolute;
+            background-color: hotpink;
+            color: white;
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 400px; /* Position it below the high score */
+            z-index: 12;
+        }
+
+        /* Heart Button */
+        .button1 {
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background-image: url('image/heart.png');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-color: transparent;
+            border: none;
+            outline: none;
+            cursor: pointer;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 200px;
+            z-index: 10;
+        }
+
+        /* Confetti heart animation */
+        .confetti-heart {
+            position: absolute;
+            width: 30px;
+            height: 30px;
+            background-image: url('image/heart.png'); /* Replace with the path to your heart image */
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.9;
+            animation: fall 5s linear infinite, float 3s ease-in-out infinite;
+        }
+
+        @keyframes fall {
+            0% {
+                top: -10%;
+                opacity: 1;
+            }
+            100% {
+                top: 100%;
+                opacity: 0;
+            }
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateX(0);
+            }
+            50% {
+                transform: translateX(20px);
+            }
+        }
+
+          /* Back button (top right corner) */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: hotpink;
+            color: white;
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+    <h1>Click the heart!</h1>
+    <div>
+        <div class="score"><span id="score">0</span></div>
+        <div class="high-score" id="high-score">High Score: 0</div>
+        <button class="button1" onclick="increaseLove()"></button>
+        <button class="reset-btn" onclick="resetHighScore()">Reset High Score</button>
+    </div>
+    <!-- Back to Game button -->
+    <button class="back-btn" onclick="window.location.href='game.html';">Back</button>
+
+    <script>
+        let love = 0;
+        let highScore = localStorage.getItem("highScore") || 0; // Retrieve high score from localStorage
+        document.getElementById("high-score").innerText = `High Score: ${highScore}`;
+
+        // Function to increase love score
+        function increaseLove() {
+            love++; // Increment score
+            document.getElementById("score").innerText = love; // Update score text
+
+            // Check if current score is greater than high score
+            if (love > highScore) {
+                highScore = love;
+                localStorage.setItem("highScore", highScore); // Save the new high score to localStorage
+                document.getElementById("high-score").innerText = `High Score: ${highScore}`; // Update high score display
+            }
+        }
+
+        // Function to reset high score
+        function resetHighScore() {
+            localStorage.removeItem("highScore"); // Remove high score from localStorage
+            highScore = 0; // Reset high score to 0
+            document.getElementById("high-score").innerText = `High Score: ${highScore}`; // Update high score display
+        }
+
+
+        // Generate falling hearts
+        function createConfetti() {
+            const heart = document.createElement('div');
+            heart.classList.add('confetti-heart');
+            // Randomize position and size for variety
+            heart.style.left = Math.random() * 100 + '%'; // Random horizontal position
+            heart.style.animationDuration = (Math.random() * 3 + 3) + 's'; // Randomize falling speed
+            document.body.appendChild(heart);
+
+            // Remove heart element after animation ends
+            setTimeout(() => {
+                heart.remove();
+            }, 5000);
+        }
+
+        // Create confetti hearts every 100ms
+        setInterval(createConfetti, 100);
+    </script>
+</body>
+</html>
+

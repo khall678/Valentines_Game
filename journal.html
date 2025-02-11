@@ -1,0 +1,110 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Journal</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f7e1d7;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .journal-container {
+            background-image: url('image/journal.jpg'); /* Add your cartoon journal image */
+            background-size: cover;
+            width: 600px;
+            height: 500px;
+            padding: 20px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .entry {
+            width: 80%;
+            height: 200px;
+            border: none;
+            background: transparent;
+            font-size: 18px;
+            outline: none;
+            resize: none;
+            padding: 10px;
+        }
+        .save-btn {
+            background-color: hotpink;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        .entries {
+            width: 80%;
+            max-height: 150px;
+            overflow-y: auto;
+            background: white;
+            padding: 10px;
+            margin-top: 10px;
+        }
+
+
+          /* Back button (top right corner) */
+        .back-btn {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: hotpink;
+            color: white;
+            font-size: 18px;
+            padding: 10px 20px;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+            z-index: 20;
+        }
+    </style>
+</head>
+<body>
+    <div class="journal-container">
+        <textarea id="entry" class="entry" placeholder="Write your message..."></textarea>
+        <button class="save-btn" onclick="saveEntry()">Save</button>
+        <div id="entries" class="entries"></div>
+    </div>
+    <!-- Back to Game button -->
+    <button class="back-btn" onclick="window.location.href='game.html';">Back</button>
+
+    <script>
+        function saveEntry() {
+            let entryText = document.getElementById('entry').value;
+            if (entryText.trim() === '') return;
+            let date = new Date().toLocaleString();
+            let entry = { text: entryText, date: date };
+            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+            entries.unshift(entry);
+            localStorage.setItem('journalEntries', JSON.stringify(entries));
+            document.getElementById('entry').value = '';
+            displayEntries();
+        }
+
+        function displayEntries() {
+            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+            let entriesDiv = document.getElementById('entries');
+            entriesDiv.innerHTML = '';
+            entries.forEach(entry => {
+                let div = document.createElement('div');
+                div.innerHTML = `<strong>${entry.date}</strong><p>${entry.text}</p><hr>`;
+                entriesDiv.appendChild(div);
+            });
+        }
+
+        window.onload = displayEntries;
+    </script>
+</body>
+</html>

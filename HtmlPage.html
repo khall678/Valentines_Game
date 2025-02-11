@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvanAndKayla</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+        }
+        .parallax {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .layer {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background-size: contain;
+            background-position: center;
+             background-repeat: no-repeat;
+            
+        }
+        .background {
+            background-image: url('image/sky.jpg'); /* Add your background image */
+            transform: translateY(0px);
+           background-size: cover;
+        }
+        .midground {
+            background-image: url('image/boston.png'); /* Add a semi-detailed layer */
+            transform: translateY(0px);
+              background-position: center 70%;
+            
+        }
+        .foreground {
+            background-image: url('image/cartoon_edit.png'); /* Add a close-up detailed layer */
+            transform: translateY(0px);
+             background-position:  center 70%;
+             background-repeat: no-repeat;
+             background-size: 30% 50%;
+                 
+        }
+
+        .heading {
+    position: absolute;
+    top: 50px; /* Adjust as needed */
+    width: 100%;
+    text-align: center;
+    z-index: 10; /* Ensure it appears above other layers */
+}
+
+.heading h1 {
+    margin: 0;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0); /* Optional: semi-transparent background for readability */
+    color: white; /* Text color */
+    font-size: 3em; /* Adjust as needed */
+}
+
+.button {
+  border: none;
+  color: white;
+  padding: 15px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  cursor: pointer;
+  position: absolute;
+ 
+}
+    .button1 {
+        background-color: #008CBA;/* Blue */
+        left: 50%;
+        transform: translateX(-50%);
+        top: 120px; /* Adjust this value as needed to position below the heading */
+
+    } 
+
+    </style>
+</head>
+<body>
+
+    
+    <div class="parallax">
+        <div class="layer background" data-speed="0.2"></div>
+        <div class="layer midground" data-speed="0.5"></div>
+        <div class="layer foreground" data-speed="0.8"></div>
+        <div class="heading">
+        <h1>Evan and Kayla </h1>
+          </div>
+        <div class="button button1" onclick="startGame()">Start Game</div>
+    </div>
+   
+    <script>
+        document.addEventListener("mousemove", (event) => {
+            let layers = document.querySelectorAll(".layer");
+            layers.forEach(layer => {
+                let speed = layer.getAttribute("data-speed");
+                let x = (window.innerWidth - event.pageX * speed) / 100;
+                let y = (window.innerHeight - event.pageY * speed) / 100;
+                layer.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+     
+            function startGame() {
+                window.location.href = "game.html"; // Change this to the actual game page
+             }
+
+
+    </script>
+</body>
+</html>

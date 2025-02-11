@@ -1,0 +1,121 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EvanAndKayla</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            text-align: center;
+            font-family: 'Poppins', sans-serif;
+        }
+        .parallax {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .layer {
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+        }
+        .background {
+            background-image: url('image/sky.jpg');
+            background-size: cover;
+        }
+        .midground {
+            background-image: url('image/boston.png');
+            background-position: center 70%;
+        }
+        .foreground {
+            background-image: url('image/cartoon_edit.png');
+            background-position: center 70%;
+            background-repeat: no-repeat;
+            background-size: 30% 50%;
+        }
+        
+        /* Button Styles */
+        .button-container {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 20px;
+        }
+        .menu-button {
+            background-color: transparent;
+            border: 2px solid hotpink;
+            color: hotpink;
+            padding: 10px 20px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: 0.3s;
+            border-radius: 10px;
+        }
+        .menu-button:hover {
+            background-color: hotpink;
+            color: white;
+        }
+
+           /* Back button (top right corner) */
+ .back-btn {
+     position: absolute;
+     top: 20px;
+     right: 20px;
+     background-color: hotpink;
+     color: white;
+     font-size: 18px;
+     padding: 10px 20px;
+     border: none;
+     cursor: pointer;
+     border-radius: 5px;
+     z-index: 20;
+ }
+
+    </style>
+</head>
+<body>
+
+    <div class="parallax">
+        <div class="layer background" data-speed="0.2"></div>
+        <div class="layer midground" data-speed="0.5"></div>
+        <div class="layer foreground" data-speed="0.8"></div>
+
+        <!-- Button Menu -->
+        <div class="button-container">
+            <button class="menu-button" onclick="navigateTo('journal.html')">Write a Message</button>
+            <button class="menu-button" onclick="navigateTo('love.html')">Send Love</button>
+            <button class="menu-button" onclick="navigateTo('explore.html')">Explore</button>
+        </div>
+    </div>
+
+     <!-- Back to Game button -->
+ <button class="back-btn" onclick="window.location.href='game.html';">Back</button>
+
+
+    <script>
+        document.addEventListener("mousemove", (event) => {
+            let layers = document.querySelectorAll(".layer");
+            layers.forEach(layer => {
+                let speed = layer.getAttribute("data-speed");
+                let x = (window.innerWidth - event.pageX * speed) / 100;
+                let y = (window.innerHeight - event.pageY * speed) / 100;
+                layer.style.transform = `translate(${x}px, ${y}px)`;
+            });
+        });
+
+        function navigateTo(page) {
+            window.location.href = page;
+        }
+    </script>
+
+</body>
+</html>
