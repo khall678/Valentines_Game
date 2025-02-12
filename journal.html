@@ -81,20 +81,34 @@
     <button class="back-btn" onclick="window.location.href='game.html';">Back</button>
 
     <script>
-        function saveEntry() {
-            let entryText = document.getElementById('entry').value;
-            if (entryText.trim() === '') return;
-            let date = new Date().toLocaleString();
-            let entry = { text: entryText, date: date };
-            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
-            entries.unshift(entry);
-            localStorage.setItem('journalEntries', JSON.stringify(entries));
-            document.getElementById('entry').value = '';
-            displayEntries();
-        }
+       function saveEntry() {
+    let entryText = document.getElementById('entry').value;
+    if (entryText.trim() === '') return;
+    let date = new Date().toLocaleString();
 
-        function displayEntries() {
-            let entries = JSON.parse(localStorage.getItem('journalEntries')) || [];
+    // Send the data to the Flask backend
+    fetch('https://your-render-app-url/save_entry', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            text: entryText,
+            date: date
+        })
+    }).then(response => response.json())
+      .then(data => {
+        console.log(data.message); // Success message
+        document.getElementById('entry').value = ''; // Clear the textarea
+        displayEntries(); // Refresh the entries
+    }).catch(error => console.log('Error saving entry:', error));
+}
+
+function displayEntries() {
+    // Get entries from Flask API
+    fetch('https://valentines-game-u9dg.onrender.com')
+        .then(response => response.json())
+        .then(entries => {
             let entriesDiv = document.getElementById('entries');
             entriesDiv.innerHTML = '';
             entries.forEach(entry => {
@@ -102,7 +116,11 @@
                 div.innerHTML = `<strong>${entry.date}</strong><p>${entry.text}</p><hr>`;
                 entriesDiv.appendChild(div);
             });
-        }
+        }).catch(error => console.log('Error loading entries:', error));
+}
+
+window.onload = displayEntries;
+
 
         window.onload = displayEntries;
     </script>
