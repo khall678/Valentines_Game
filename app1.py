@@ -8,8 +8,9 @@ app = Flask(__name__)
 CORS(app)  # Allow frontend requests
 
 # Use PostgreSQL database from Render
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/journal_db")  
-app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+# DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://user:password@localhost/journal_db")  
+# app.config['SQLALCHEMY_DATABASE_URI'] = DATABASE_URL
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv("DATABASE_URL")
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
